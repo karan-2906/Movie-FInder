@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 import { searchMovie } from "../../Feature/currentgenre";
 import { useDispatch } from "react-redux";
 
@@ -27,7 +28,8 @@ const Nav = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <IoMdSearch className="absolute right-2 top-1/2 hidden -translate-y-1/2 sm:block cursor-pointer" onClick={handleKeyPress} />
+          <FaSearch className='text-2xl text-light-gray justify-end items-end' onClick={handleKeyPress} />
+          {/* <IoMdSearch className="absolute right-2 top-1/2 hidden -translate-y-1/2 sm:block cursor-pointer" onClick={handleKeyPress} /> */}
         </div>
         <Link
           to={`/genre`}
