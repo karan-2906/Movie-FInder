@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetGenresQuery, useGetMoviesQuery } from '../../services/Api';
-import Movielist from '../Movielist/Movielist';
+import Movielist from '../movielist/Movielist';
 import { selectGenre } from '../../Feature/currentgenre';
 import Pagination from '../Pagination/Pagination';
 
