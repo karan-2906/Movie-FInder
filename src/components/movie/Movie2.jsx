@@ -19,7 +19,7 @@ const Movie2 = ({ movie, index }) => {
           </Link>
         </div>
         <div className="h-auto">
-          <p className="balance font-semibold mt-4 w-full overflow-hidden overflow-ellipsis whitespace-nowrap px-4 text-white">
+          <p className="balance mt-4 w-full overflow-hidden overflow-ellipsis whitespace-nowrap px-4 text-white">
             {movie.title}
           </p>
           <Star starVote={movie.vote_average} />

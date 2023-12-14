@@ -1,20 +1,40 @@
-import React from 'react'
-import Pagination from '../Pagination/Pagination'
-import Movielist from '../movielist/Movielist'
-import { useGetPopularMoviesQuery } from '../../services/Api'
-
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetGenresQuery, useGetMoviesQuery } from '../../services/Api';
+import Movielist from '../MovieList/Movielist';
+import { selectGenre } from '../../Feature/currentgenre';
+import Pagination from '../Pagination/Pagination';
 
 const Movies = () => {
+  const [page, setPage] = useState(1);
+  const { genreName, searchQuery } = useSelector((state) => state.currentGenre);
+  const { data, error, isFetching } = useGetMoviesQuery({ genreName, page, searchQuery });
 
-  const { data, error, isFetching } = useGetPopularMoviesQuery()
-  console.log(data)
+  if (isFetching) {
+    return (
+      <div className="flex justify-center">
+        <img src="./loader.svg" alt="loader.." />
+      </div>
+    )
+  }
+
+  if (!data.results.length) {
+    return (
+      <div className="flex items-center mt-[20px]">
+        <h4>No Movies Match That Name</h4>
+        <br />Look for Something Else
+      </div>
+    )
+  }
+
+  if (error) return "An Error has Occurred";
 
   return (
-    <section className='w-full h-auto p-6 flex flex-col justify-center item-center'>
-      <Movielist movies={data}/>
-      <Pagination/>
-    </section>
+    <div>
+      <Movielist movies={data} />
+      <Pagination currentPage={page} setPage={setPage} totalPages={data.total_pages} />
+    </div>
   )
 }
 
-export default Movies
+export default Movies;

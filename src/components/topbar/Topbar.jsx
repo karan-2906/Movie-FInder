@@ -1,33 +1,45 @@
-import React from 'react'
-import { AiOutlineStar } from 'react-icons/ai'
+import React from "react";
+import { useGetGenresQuery } from "../../services/Api";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectGenre } from "../../Feature/currentgenre";
+import genreIcons from "../../assets/genres";
 
 const Topbar = () => {
-    
-    const genre = [
-        "genre1",
-        "genre2",
-        "genre3",
-       " genre4",
-        "genre5",
-        "genre6",
-        "genre7",
-        "genre8",
-        "genre9",
-        "genre10",
-        "genre11",
-    ]
-  return (
-    <div className='text-white flex gap-4 py-3 px-3 overflow-x-auto'>
-        {
-        genre.map((item, i) => {
-            <button className='px-4 py-2 border rounded-lg flex justify-center items-center gap-2'>
-                <AiOutlineStar/>
-                <p className=''>{item}</p>
-            </button>
-        })
-    }
-    </div>
-  )
-}
+  const { data, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
+  // const { genreName } = useSelector((state) => state.currentGenre);
 
-export default Topbar
+  console.log(data);
+
+  return (
+    <div className="flex h-full w-full items-center overflow-x-scroll px-5">
+      {isFetching ||
+        data?.genres.map(({ name, id }) => (
+          <Link
+            key={id}
+            to={`/genre/${name}`}
+            value={id}
+            className="mr-2 grid place-content-center rounded-lg border px-2 py-2 text-white"
+          >
+            <div
+              className="flex items-center justify-center"
+              onClick={() => dispatch(selectGenre(id))}
+            >
+              <div className="mr-2">
+                <img
+                  src={genreIcons[name.toLowerCase()]}
+                  width={30}
+                  height={30}
+                  className="mr-5 text-white invert"
+                />
+              </div>
+              <p className="whitespace-nowrap">{name}</p>
+            </div>
+          </Link>
+        ))}
+    </div>
+  );
+};
+
+export default Topbar;

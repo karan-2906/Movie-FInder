@@ -1,103 +1,140 @@
-import React from 'react'
-import Star from '../Star'
-import { AiOutlineStar } from 'react-icons/ai'
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useGetMovieQuery } from "../../services/Api";
+import Star from "../Star";
+import { CiLocationArrow1 } from "react-icons/ci";
 import { RxTriangleRight } from "react-icons/rx";
-import { useGetMovieQuery } from '../../services/Api'
-import { useParams } from 'react-router-dom';
-import { CiLocationArrow1 } from 'react-icons/ci'
 
+function Modal({ data, modalActive, modalClose }) {
+  if (!modalActive) return null;
 
-const Inofrmation = () => {
-    const { id } = useParams();
-    console.log(id);
-
-    const { data, error, isFetching } = useGetMovieQuery(id);
-    return (
-        <section className='w-full max-w-[1700px] flex flex-col justify-center items-center lg:flex-row lg:items-start'>
-            <div className='w-full flex justify-center items-center lg:w-1/2 '>
-                <div className='w-[50%]  my-5 shadow-lg shadow-light-blue rounded-2xl overflow-hidden'>
-                    <img
-                        src={
-                            data?.poster_path
-                                ? `http://image.tmdb.org/t/p/w500/${data?.poster_path}`
-                                : "https://www.fillmurray.com/200/300"
-                        }
-                        alt={data?.title}
-                    />
-                </div>
-            </div>
-            <div className='w-full text-white flex p-5 flex-col justify-start items-center lg:w-1/2'>
-                <div className="w-[70%]">
-                    <div className="text-center w-full">
-                        <h1 className="font-black text-3xl">{data?.title}</h1>
-                        <p className="text-sm mt-2">{data?.tagline}</p>
-                    </div>
-                    <div className="mt-3 w-full flex flex-col lg:flex-row justify-center items-center lg:justify-between">
-                        <Star starVote={data?.vote_average} />
-                        <p className="mt-3">
-                            {data?.status} | {data?.runtime} min | {data?.release_date} | {data?.original_language}
-                        </p>
-                    </div>
-                    <div className="mt-3 w-full">
-                        <h1 className="pb-2 font-bold">Genres:</h1>
-                        <div className="flex flex-wrap items-center justify-start">
-                            {data?.genres.map((genre, index) => (
-                                <p
-                                    key={index}
-                                    className="mb-4 mr-4 flex items-center justify-center rounded-lg bg-[#227fb4] px-3 py-2 text-sm"
-                                >
-                                    <span className="mr-2 uppercase">{genre?.name}</span>
-                                    <CiLocationArrow1 className="text-sm" />
-                                </p>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="mt-3">
-
-                        <h1 className="font-bold">Information:</h1>
-                        <p className="mt-3">
-                            {data?.overview}
-                        </p>
-                    </div>
-                    <div className="w-full mt-5">
-                        <h1 className="font-bold">Top Cast:</h1>
-                        <div className="flex flex-wrap items-center justify-center gap-10 lg:gap-2">
-                            {data?.credits?.cast
-                                .map((character, index) => (
-                                    <div
-                                        key={index}
-                                        className="mt-2 flex w-[100px] flex-col items-center justify-start"
-                                    >
-                                        <img
-                                            className="w-full rounded-2xl"
-                                            src={`https://image.tmdb.org/t/p/w500/${character?.profile_path}`}
-                                            alt={character?.name}
-                                        />
-                                        <p className="mt-2 w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-center text-sm">
-                                            {character?.name}
-                                        </p>
-                                    </div>
-                                ))
-                                .slice(0, 10)}
-                        </div>
-
-                    </div>
-                    <div className="w-full mt-4 flex justify-start items-center">
-                        <button className="">
-                            <a href={data?.homepage} target='_blank' className='px-3 py-2 rounded-lg mr-4 flex justify-center items-center hover:bg-light-blue'>
-                                <span>Website</span>
-                                <RxTriangleRight />
-                            </a>
-                        </button>
-                        <button className="px-3 py-2 rounded-lg flex justify-center items-center ">
-                            <span>Trailer</span>
-                            <RxTriangleRight />
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
+  return (
+    <div
+      onClick={() => modalClose()}
+      className="fixed inset-0 grid place-content-center bg-black bg-opacity-50 backdrop-blur-lg"
+    >
+      {data?.videos?.results?.length > 0 && (
+        <iframe
+          autoPlay
+          className="aspect-video h-[150px] sm:h-[250px] md:h-[350px] lg:h-[500px]"
+          title="Trailer"
+          src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+          allow="autoplay"
+        />
+      )}
+    </div>
+  );
 }
 
-export default Inofrmation
+const Inofrmation = () => {
+  const { id } = useParams();
+
+  const { data, error, isFetching } = useGetMovieQuery(id);
+
+  const [modalActive, setModalActive] = useState(false);
+
+  // console.log(data);
+
+  return (
+    <section className="flex items-center justify-center text-white lg:h-full lg:flex-row">
+      <div className=" flex h-auto w-full max-w-[1660px] flex-col items-center justify-center lg:h-full lg:flex-row">
+        <div className="flex h-auto w-full items-center justify-center lg:w-1/2">
+          <img
+            src={
+              data?.poster_path
+                ? `http://image.tmdb.org/t/p/w500/${data?.poster_path}`
+                : "https://www.fillmurray.com/200/300"
+            }
+            alt=""
+            className="my-6 w-1/2 rounded-2xl shadow-xl shadow-[#227fb4]"
+          />
+        </div>
+        <div className="h-auto w-full px-4 pb-4 md:px-16 lg:w-1/2 lg:px-5 lg:py-5">
+          <h1 className="text-center text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
+            {data?.title}
+          </h1>
+          <p className="my-2 text-center">{data?.tagline}</p>
+          <div className="flex flex-col items-center justify-between gap-2 px-5 lg:flex-row">
+            <Star starVote={data?.vote_average} />
+            <p className="">
+              {data?.runtime}min / {data?.release_date} /{" "}
+              {data?.spoken_languages[0].english_name}
+            </p>
+          </div>
+          {/* Genres  */}
+          <div className="pt-4">
+            <h1 className="pb-2 font-bold">Genres:</h1>
+            <div className="flex flex-wrap items-center justify-start">
+              {data?.genres.map((genre, index) => (
+                <p
+                  key={index}
+                  className="mb-4 mr-4 flex items-center justify-center rounded-lg bg-[#227fb4] px-3 py-2 text-sm"
+                >
+                  <span className="mr-2 uppercase">{genre?.name}</span>
+                  <CiLocationArrow1 className="text-sm" />
+                </p>
+              ))}
+            </div>
+            {/* Information  */}
+            <div className="">
+              <h1 className="font-bold">Information:</h1>
+              <p className="">{data?.overview}</p>
+            </div>
+            {/* Top Cast  */}
+            <div className="mt-4">
+              <h1 className="font-bold">Top Cast:</h1>
+              <div className="flex flex-wrap items-center justify-center gap-10 lg:gap-2">
+                {data?.credits?.cast
+                  .map((character, index) => (
+                    <div
+                      key={index}
+                      className="mt-2 flex w-[100px] flex-col items-center justify-start"
+                    >
+                      <img
+                        className="w-full rounded-2xl"
+                        src={`https://image.tmdb.org/t/p/w500/${character?.profile_path}`}
+                        alt={character?.name}
+                      />
+                      <p className="mt-2 w-full overflow-hidden overflow-ellipsis whitespace-nowrap text-center text-sm">
+                        {character?.name}
+                      </p>
+                    </div>
+                  ))
+                  .slice(0, 6)}
+              </div>
+            </div>
+          </div>
+          {/* Links  */}
+          <div className="mt-4 flex items-center justify-start gap-4">
+            <a
+              href={data?.homepage}
+              className="flex items-center justify-center rounded-full border px-3 py-1"
+              target="_blank"
+            >
+              <span>Website</span>
+              <RxTriangleRight />
+            </a>
+            <button
+              onClick={() => {
+                setModalActive(true);
+              }}
+              className="flex items-center justify-center rounded-full border px-3 py-1"
+            >
+              <span>Trailer</span>
+              <RxTriangleRight />
+            </button>
+            <Modal
+              data={data}
+              modalActive={modalActive}
+              modalClose={() => {
+                setModalActive(false);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Inofrmation;

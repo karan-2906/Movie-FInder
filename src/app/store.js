@@ -1,10 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { TMBDAPI } from '../services/Api'
+// Configure the API from reduxjs toolkit
+
+import { configureStore } from "@reduxjs/toolkit";
+import { tmdbAPI } from "../services/Api";
+import genreReducer from "../Feature/currentgenre";
 
 export default configureStore({
-  reducer: {
-    [TMBDAPI.reducerPath]: TMBDAPI.reducer,
-  },
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(TMBDAPI.middleware),
+    reducer: {
+        [tmdbAPI.reducerPath]: tmdbAPI.reducer,
+        currentGenre: genreReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(tmdbAPI.middleware),
 })
