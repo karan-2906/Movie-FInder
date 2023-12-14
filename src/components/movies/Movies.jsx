@@ -31,7 +31,9 @@ const Movies = () => {
 
   return (
     <div>
-      <Movielist movies={data} />
+      <div className="m-5 bg-slate-900 rounded-3xl lg:rounded-[3%]">
+        <Movielist movies={data} />
+      </div>
       <Pagination currentPage={page} setPage={setPage} totalPages={data.total_pages} />
     </div>
   )
